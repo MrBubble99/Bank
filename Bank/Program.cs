@@ -69,6 +69,7 @@ namespace Bank
                         Console.WriteLine("Introduce your Passwort");
                         string passwort = Console.ReadLine();
                         //loop check user list to verificate introduced pw and user in user list
+                        int countLogin = 0;
                         for (int i = 0; i < UserList.Count; i++)
                         {
                             if (userName == UserList[i].Unsername && passwort == UserList[i].PassWort)
@@ -78,7 +79,7 @@ namespace Bank
                                 actualUserAccount = UserList[i].BankNumber;
                                 actualUserMony = UserList[i].USD;
                                 actualUserId = i;
-
+                                countLogin++;
                                 logedIn = true;
                                 Console.WriteLine($"Hello {actualUser}");
                                 Console.WriteLine($"your balance is: {UserList[i].USD}");
@@ -93,7 +94,7 @@ namespace Bank
                                 string trans = Console.ReadLine();
                                 if (trans.Equals("1"))// Money transfer
                                 {
-
+                                    int CountTrans = 0;
                                     Console.WriteLine("Introduce the name from the benefited");
                                     Trans.RecivingUser = Console.ReadLine();
                                     Console.WriteLine("Introduce the Acount number from the benefited");
@@ -114,7 +115,7 @@ namespace Bank
                                             UserList[x].USD = UserList[x].USD + Trans.TrasAmount;
                                             UserList[actualUserId].USD = UserList[actualUserId].USD - 1;
                                             UserList[0].USD = UserList[0].USD + 1;
-
+                                            CountTrans++;
 
 
                                             TransList.Add(new Transaction { PayingUser = Trans.PayingUser, AcountNoPU = Trans.AcountNoPU, RecivingUser = Trans.RecivingUser, AcountNoRU = Trans.AcountNoRU, TrasAmount = Trans.TrasAmount, RefTrans = Trans.RefTrans});
@@ -123,6 +124,10 @@ namespace Bank
                                             Console.WriteLine($"From : {actualUserAccount} To : {Trans.AcountNoRU}  amount: {Trans.TrasAmount} Reference: {Trans.RefTrans}");
                                             break;
                                         }
+                                    }
+                                    if (CountTrans.Equals(0))//will send error message if User name or usernumber for transfere are wrong
+                                    {
+                                        Console.WriteLine($"Somthink went wrong. Benefit name or bank number are wrong. Please check and try again");
                                     }
 
                                 }
@@ -156,6 +161,7 @@ namespace Bank
                                 }
                                 else if (trans.Equals("4") && actualUser.Equals("Master"))
                                 {
+                                    int CountMasterTrans = 0;
                                     Console.WriteLine("Introduce the name from the benefited");
                                     Trans.RecivingUser = Console.ReadLine();
                                     Console.WriteLine("Introduce the Acount number from the benefited");
@@ -175,7 +181,7 @@ namespace Bank
                                         {
                                             UserList[x].USD = UserList[x].USD + Trans.TrasAmount;
                                             UserList[0].USD = UserList[0].USD + 1;
-
+                                            CountMasterTrans++;
 
 
                                             TransList.Add(Trans);
@@ -186,6 +192,10 @@ namespace Bank
                                             break;
                                         }
 
+                                    }
+                                    if (CountMasterTrans.Equals(0))
+                                    {
+                                        Console.WriteLine("Somthink went wrong. Benefit name or bank number are wrong. Please check and try again");
                                     }
 
 
@@ -204,12 +214,16 @@ namespace Bank
                                     break;
                                 }
                             }
+                            
 
 
 
 
 
-
+                        }
+                        if (countLogin.Equals(0))
+                        {
+                            Console.WriteLine("Your password or username is wrong. Please try again.");
                         }
 
                     }
@@ -217,7 +231,9 @@ namespace Bank
 
 
                     else
-                    {
+                    { //create new user
+                        int CountUserTwice = 0;
+                        int CountUserBankNumTwice = 0;
                         Console.WriteLine("Create your User now !!!");
                         Console.WriteLine("Introduce your Username");
                         Us.Unsername = Console.ReadLine();
@@ -226,8 +242,37 @@ namespace Bank
                         Console.WriteLine("Introduce how mutch mony you will deposti to your balance");
                         Us.USD = Convert.ToInt32(Console.ReadLine());
                         Us.BankNumber = rand.Next();
-                        UserList.Add(new User { Unsername = Us.Unsername, PassWort = Us.PassWort, USD = Us.USD, BankNumber = Us.BankNumber });
-                        Console.WriteLine("Your user is created. Please Login");
+
+
+
+
+                        //Check if user exist to avoid duplicate
+                        for (int i = 0; i < UserList.Count; i++)
+                        {
+                            if (Us.Unsername.Equals(UserList[i].Unsername))
+                            { 
+                                CountUserTwice++;
+                            }
+                            //Check if banknumber exist to avoid duplicate
+                            if (Us.BankNumber.Equals(UserList[i].BankNumber)){
+                                CountUserBankNumTwice++;
+                            }
+                            
+
+                        }
+                        if (CountUserTwice.Equals(0))
+                        {
+                            UserList.Add(new User { Unsername = Us.Unsername, PassWort = Us.PassWort, USD = Us.USD, BankNumber = Us.BankNumber });
+                            Console.WriteLine("Your user is created. Please Login");
+                        }
+                        if(CountUserTwice.Equals(1))
+                        {
+                            Console.WriteLine("User alredy exist please try an other one !!!");
+                        }
+                        if (CountUserBankNumTwice.Equals(1))
+                        {
+                            Console.WriteLine("Bank number alredy exist please try again !!!");
+                        }
 
 
                     }
