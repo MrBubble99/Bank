@@ -118,7 +118,7 @@ namespace Bank
                                             CountTrans++;
 
 
-                                            TransList.Add(new Transaction { PayingUser = Trans.PayingUser, AcountNoPU = Trans.AcountNoPU, RecivingUser = Trans.RecivingUser, AcountNoRU = Trans.AcountNoRU, TrasAmount = Trans.TrasAmount, RefTrans = Trans.RefTrans});
+                                            TransList.Add(new Transaction { PayingUser = Trans.PayingUser, AcountNoPU = Trans.AcountNoPU, RecivingUser = Trans.RecivingUser, AcountNoRU = Trans.AcountNoRU, TrasAmount = Trans.TrasAmount, RefTrans = Trans.RefTrans });
                                             Console.WriteLine("your transaction was done succesfuly");
                                             Console.WriteLine($"your Balance is :  {UserList[actualUserId].USD}");
                                             Console.WriteLine($"From : {actualUserAccount} To : {Trans.AcountNoRU}  amount: {Trans.TrasAmount} Reference: {Trans.RefTrans}");
@@ -214,7 +214,7 @@ namespace Bank
                                     break;
                                 }
                             }
-                            
+
 
 
 
@@ -234,50 +234,80 @@ namespace Bank
                     { //create new user
                         int CountUserTwice = 0;
                         int CountUserBankNumTwice = 0;
+                        int CountSpecialCaracter = 0;
                         Console.WriteLine("Create your User now !!!");
                         Console.WriteLine("Introduce your Username");
                         Us.Unsername = Console.ReadLine();
-                        Console.WriteLine("Introduce your Passwort");
+                        Console.WriteLine("Introduce your Passwort. I'ts needs to 8 caractre long minimum and minimum one of the folowing caracters !, +, -, #,_, §, $, %, " +
+                            "&,  /, (, ), ?, <, >, |, ;, :, µ, ~, *, ', {, }, [, ]");
                         Us.PassWort = Console.ReadLine();
                         Console.WriteLine("Introduce how mutch mony you will deposti to your balance");
                         Us.USD = Convert.ToInt32(Console.ReadLine());
                         Us.BankNumber = rand.Next();
 
 
-
-
-                        //Check if user exist to avoid duplicate
-                        for (int i = 0; i < UserList.Count; i++)
+                        //Check password for safty
+                        ;
+                        for (int a = 0; a < Us.PassWort.Length; a++)
                         {
-                            if (Us.Unsername.Equals(UserList[i].Unsername))
-                            { 
-                                CountUserTwice++;
+                            Console.WriteLine(Us.PassWort[a]);
+                            if (Us.PassWort[a].Equals('!')  ||Us.PassWort[a].Equals('+') || Us.PassWort[a].Equals('-') || Us.PassWort[a].Equals('#')
+                             || Us.PassWort[a].Equals('_') || Us.PassWort[a].Equals('§') || Us.PassWort[a].Equals('$') || Us.PassWort[a].Equals('%')
+                             || Us.PassWort[a].Equals('&') || Us.PassWort[a].Equals('/') || Us.PassWort[a].Equals('(') || Us.PassWort[a].Equals(')')
+                             || Us.PassWort[a].Equals('?') || Us.PassWort[a].Equals('<') || Us.PassWort[a].Equals('>') || Us.PassWort[a].Equals('|')
+                             || Us.PassWort[a].Equals(';') || Us.PassWort[a].Equals(':') || Us.PassWort[a].Equals('µ') || Us.PassWort[a].Equals('~')
+                             || Us.PassWort[a].Equals('*') || Us.PassWort[a].Equals('{') || Us.PassWort[a].Equals('}') || Us.PassWort[a].Equals('[') 
+                             || Us.PassWort[a].Equals(']'))
+                            {
+                                CountSpecialCaracter++;
+
+
+
                             }
-                            //Check if banknumber exist to avoid duplicate
-                            if (Us.BankNumber.Equals(UserList[i].BankNumber)){
-                                CountUserBankNumTwice++;
-                            }
-                            
 
                         }
-                        if (CountUserTwice.Equals(0))
-                        {
-                            UserList.Add(new User { Unsername = Us.Unsername, PassWort = Us.PassWort, USD = Us.USD, BankNumber = Us.BankNumber });
-                            Console.WriteLine("Your user is created. Please Login");
-                        }
-                        if(CountUserTwice.Equals(1))
-                        {
-                            Console.WriteLine("User alredy exist please try an other one !!!");
-                        }
-                        if (CountUserBankNumTwice.Equals(1))
-                        {
-                            Console.WriteLine("Bank number alredy exist please try again !!!");
-                        }
+
+
+                            //Check if user exist to avoid duplicate
+                            for (int i = 0; i < UserList.Count; i++)
+                            {
+                                if (Us.Unsername.Equals(UserList[i].Unsername) && Us.PassWort.Length >= 8 && CountSpecialCaracter > 0)
+                                {
+                                    CountUserTwice++;
+                                }
+                                //Check if banknumber exist to avoid duplicate
+                                if (Us.BankNumber.Equals(UserList[i].BankNumber))
+                                {
+                                    CountUserBankNumTwice++;
+                                }
+
+                                
+                            }
+                            if (CountUserTwice.Equals(0) && Us.PassWort.Length > 7 && CountSpecialCaracter > 0)
+                            {
+                                UserList.Add(new User { Unsername = Us.Unsername, PassWort = Us.PassWort, USD = Us.USD, BankNumber = Us.BankNumber });
+                                Console.WriteLine("Your user is created. Please Login");
+                            }
+                            if (CountUserTwice.Equals(1))
+                            {
+                                Console.WriteLine("User alredy exist please try an other one !!!");
+                            }
+                            if (CountUserBankNumTwice.Equals(1))
+                            {
+                                Console.WriteLine("Bank number alredy exist please try again !!!");
+                            }
+                            if (CountSpecialCaracter.Equals(0))
+                            {
+                                Console.WriteLine("The password needs a special caracter");
+                            }
+                            if (Us.PassWort.Length < 7)
+                            {
+                                Console.WriteLine("The passwort needs to be minumum 8 caracters long");
+                            }
+                        
 
 
                     }
-
-
                 }
             }
             catch (Exception e)
