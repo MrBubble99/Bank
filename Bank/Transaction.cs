@@ -15,9 +15,7 @@ namespace Bank
         public int TrasAmount { get; set; }
         public string RefTrans { get; set; }
 
-        List<Transaction> TransList = new List<Transaction>();
-
-        Transaction Trans = new Transaction();
+        
     }
 
 }

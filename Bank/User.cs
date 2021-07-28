@@ -14,8 +14,5 @@ namespace Bank
         public int USD { get; set; }
         public int BankNumber { get; set; }
 
-        User Us = new User();
-
-        List<User> UserList = new List<User>();
     }
 }
